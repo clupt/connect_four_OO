@@ -45,7 +45,7 @@ class Game {
 
     for (let x = 0; x < this.width; x++) {
       const headCell = document.createElement('td');
-      headCell.setAttribute('id', x);
+      headCell.setAttribute('id', this.x);
       top.append(headCell);
     }
 
@@ -61,9 +61,7 @@ class Game {
         cell.setAttribute('id', `c-${y}-${x}`);
         row.append(cell);
       }
-
       board.append(row);
-
     }
     console.log("board at the end of makeHTML=", board);
   }
@@ -71,7 +69,7 @@ class Game {
 
   findSpotForCol(x) {
     for (let y = this.height - 1; y >= 0; y--) {
-      if (!board[y][x]) {
+      if (!this.board[y][x]) {
         return y;
       }
     }
@@ -80,17 +78,22 @@ class Game {
 
   placeInTable(y, x) {
     const piece = document.createElement('div');
+    console.log("piece=", piece);
+    console.log("context in placeInTable=", this);
     piece.classList.add('piece');
     piece.classList.add(`p${currPlayer}`);
     piece.style.top = -50 * (y + 2);
 
-    const spot = document.getElementById(`$c-${y}-${x}`);
+    const spot = document.getElementById(`c-${y}-${x}`);
+    console.log("spot=", spot);
+
     spot.append(piece);
   }
 
   //TODO: check to see if the message needs a context
   endGame(msg) {
-    alert(msg);
+    console.log("msg in the endGame context =", this);
+    alert(this.msg);
   }
 
   //TODO: there will be a tricky losing of context in here
@@ -101,15 +104,16 @@ class Game {
     console.log("handle click x", x);
 
     // get next spot in column (if none, ignore click)
-    const y = findSpotForCol(x);
+    const y = this.findSpotForCol(x);
+    console.log("findSpotForCol context in handleClick=", this);
     if (y === null) {
       return;
     }
 
     // place piece in board and add to HTML table
-    board[y][x] = currPlayer;
-    placeInTable(y, x);
-
+    this.board[y][x] = this.currPlayer;
+    this.placeInTable(y, x);
+    console.log("x inside of placeInTable=", x);
     // check for win
     if (checkForWin()) {
       return endGame(`Player ${currPlayer} won!`);
