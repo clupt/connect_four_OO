@@ -29,6 +29,7 @@ class Game {
   makeBoard() {
     console.log("makeBoard=", this.makeBoard);
     for (let y = 0; y < this.height; y++) {
+      console.log("makeboard context", this);
       this.board.push(Array.from({ length: this.width }));
     }
   }
@@ -95,7 +96,9 @@ class Game {
   //TODO: there will be a tricky losing of context in here
   handleClick(evt) {
     // get x from ID of clicked cell
+    console.log("handle click context", this);
     const x = +evt.target.id;
+    console.log("handle click x", x);
 
     // get next spot in column (if none, ignore click)
     const y = findSpotForCol(x);
@@ -113,7 +116,7 @@ class Game {
     }
 
     // check for tie
-    if (board.every(row => row.every(cell => cell))) {
+    if (this.board.every(row => row.every(cell => cell))) {
       return endGame('Tie!');
     }
 
