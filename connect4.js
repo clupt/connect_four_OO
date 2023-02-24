@@ -7,17 +7,15 @@
  * board fills (tie)
  */
 
-//const WIDTH = 7;
-//const HEIGHT = 6;
-
-//let currPlayer = 1; // active player: 1 or 2
-//let board = []; // array of rows, each row is array of cells  (board[y][x])
-
 /** makeBoard: create in-JS board structure:
  *   board = array of rows, each row is array of cells  (board[y][x])
  */
 
+//TODOS: add docstrings for the methods and comments
+// practice restating the bind
+
 class Game {
+
   constructor(height, width) {
     this.width = width;
     this.height = height;
@@ -27,6 +25,10 @@ class Game {
     this.currPlayer = 1;
   }
 
+  /* this method uses the width an height from the constructor to make a board
+  of whatever sizes are passed to the class and sets the context of the height,
+  width, and board variables ('instance attributes') using 'this'
+  */
   makeBoard() {
     console.log("makeBoard=", this.makeBoard);
     for (let y = 0; y < this.height; y++) {
@@ -35,13 +37,14 @@ class Game {
     }
   }
 
+  /* this method populates the game board with the appropriate ids to make the
+  board
+  */
   makeHtmlBoard() {
 
-    //board.innerHTML = ""
-
     const board = document.getElementById('board');
-
-    board.innerHTML = ""
+    //clear out the board (was duplicating between tests for Jasmine beforeEach fn)
+    board.innerHTML = "";
 
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
@@ -57,7 +60,7 @@ class Game {
     board.append(top);
     console.log("board after appending=", board);
 
-    // make main part of board
+    // this makes main part of board
     for (let y = 0; y < this.height; y++) {
       const row = document.createElement('tr');
 
@@ -71,7 +74,8 @@ class Game {
     console.log("board at the end of makeHTML=", board);
   }
 
-
+  /* this method takes in a column value (x) and returns y
+  or puts null if it is already filled  */
   findSpotForCol(x) {
     for (let y = this.height - 1; y >= 0; y--) {
       if (!this.board[y][x]) {
@@ -81,12 +85,17 @@ class Game {
     return null;
   }
 
+  /* this method places a piece on the board
+  it appends the piece to the spot that is determined by the y and x vals
+  */
+
   placeInTable(y, x) {
     const piece = document.createElement('div');
     console.log("piece=", piece);
     console.log("context in placeInTable=", this);
     piece.classList.add('piece');
     piece.classList.add(`p${this.currPlayer}`);
+    //TODO: consider removing the hard-coded css style
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`c-${y}-${x}`);
@@ -95,12 +104,15 @@ class Game {
     spot.append(piece);
   }
 
+  //TODO: update the message at the end of game to reflect winner
   endGame(msg) {
     console.log("msg in the endGame context =", this);
     alert(msg);
   }
 
   //TODO: there will be a tricky losing of context in here
+  //gives context to the instance attributes of currentPlayer and board
+  //as well as the findSpotForCol, placeInTable, checkForWin methods
   handleClick(evt) {
     // get x from ID of clicked cell
     console.log("handle click context", this);
@@ -134,7 +146,6 @@ class Game {
 
   checkForWin() {
     console.log("check for win this", this);
-    //this function
     let _win = (cells) => {
 
       console.log("_win this", this);
@@ -151,7 +162,7 @@ class Game {
           x < this.width &&
           this.board[y][x] === this.currPlayer
       );
-    }
+    };
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
